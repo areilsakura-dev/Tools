@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>拼音 → 韓文轉換器 🔐</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans CJK TC', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #764ba2;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 25px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        #output {
+            background: #f8f9fa;
+            font-size: 1.5em;
+            line-height: 1.8;
+            color: #333;
+        }
+        
+        .button-area {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        button {
+            padding: 15px 30px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .btn-convert {
+            background: #667eea;
+            color: white;
+            flex: 1;
+            max-width: 200px;
+        }
+        
+        .btn-convert:active {
+            background: #5568d3;
+            transform: scale(0.98);
+        }
+        
+        .btn-copy {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .btn-copy:active {
+            background: #45a049;
+            transform: scale(0.98);
+        }
+        
+        .btn-clear {
+            background: #f44336;
+            color: white;
+        }
+        
+        .btn-clear:active {
+            background: #da190b;
+            transform: scale(0.98);
+        }
+        
+        .examples {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        
+        .examples h3 {
+            color: #856404;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .example-item {
+            padding: 10px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .example-item:active {
+            background: #ffe8a1;
+        }
+        
+        .info {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .info h3 {
+            color: #1976D2;
+            margin-bottom: 10px;
+        }
+        
+        .info ul {
+            margin-left: 20px;
+        }
+        
+        .footer {
+            text-align: center;
+            color: #999;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            font-size: 0.9em;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.5em;
+            }
+            
+            .button-area {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+                max-width: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>拼音 → 韓文轉換器 🔐</h1>
+        <p class="subtitle">把中文拼音轉成韓文字母</p>
+        
+        <div class="info">
+            <h3>💡 使用說明</h3>
+            <ul>
+                <li>輸入中文拼音（空格分隔）</li>
+                <li>按「轉換」按鈕</li>
+                <li>手機用戶：點擊範例快速試用</li>
+            </ul>
+        </div>
+        
+        <div class="input-group">
+            <label>📝 輸入拼音</label>
+            <textarea id="input" placeholder="例如：wo ai ni"></textarea>
+        </div>
+        
+        <div class="button-area">
+            <button class="btn-convert" onclick="convert()">🔄 轉換</button>
+            <button class="btn-copy" onclick="copyOutput()">📋 複製</button>
+            <button class="btn-clear" onclick="clearAll()">🗑️ 清空</button>
+        </div>
+        
+        <div class="input-group">
+            <label>🇰🇷 韓文輸出</label>
+            <textarea id="output" readonly placeholder="轉換結果會顯示在這裡..."></textarea>
+        </div>
+        
+        <div class="examples">
+            <h3>📌 快速範例（點擊試用）</h3>
+            <div class="example-item" onclick="loadExample('wo ai ni')">
+                <strong>我愛你：</strong> wo ai ni
+            </div>
+            <div class="example-item" onclick="loadExample('jin wan jian mian')">
+                <strong>今晚見面：</strong> jin wan jian mian
+            </div>
+            <div class="example-item" onclick="loadExample('lao di fang deng ni')">
+                <strong>老地方等你：</strong> lao di fang deng ni
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Made with 🌺 by Ariel</p>
+        </div>
+    </div>
+    
+    <script>
+        // 簡化的拼音→韓文對照表
+        const py2kr = {
+            // 基本韻母
+            'a': '아', 'o': '오', 'e': '어', 'i': '이', 'u': '우', 'v': '위',
+            'ai': '아이', 'ei': '에이', 'ao': '아오', 'ou': '오우',
+            'an': '안', 'en': '언', 'ang': '앙', 'eng': '엉', 'ong': '옹',
+            'er': '얼',
+            
+            // 帶聲母的常用組合
+            'ba': '바', 'pa': '파', 'ma': '마', 'fa': '파',
+            'da': '다', 'ta': '타', 'na': '나', 'la': '라',
+            'ga': '가', 'ka': '카', 'ha': '하',
+            'ja': '자', 'qa': '차', 'xa': '사',
+            'za': '자', 'ca': '차', 'sa': '사',
+            
+            'bo': '보', 'po': '포', 'mo': '모', 'fo': '포',
+            'wo': '워',
+            
+            'de': '더', 'te': '터', 'ne': '너', 'le': '러',
+            'ge': '거', 'ke': '커', 'he': '허',
+            'me': '머',
+            
+            'bi': '비', 'pi': '피', 'mi': '미',
+            'di': '디', 'ti': '티', 'ni': '니', 'li': '리',
+            'ji': '지', 'qi': '치', 'xi': '시',
+            'yi': '이',
+            
+            'bu': '부', 'pu': '푸', 'mu': '무', 'fu': '푸',
+            'du': '두', 'tu': '투', 'nu': '누', 'lu': '루',
+            'gu': '구', 'ku': '쿠', 'hu': '후',
+            'ju': '주', 'qu': '추', 'xu': '수',
+            'zu': '주', 'cu': '추', 'su': '수',
+            'wu': '우',
+            
+            // ai/ei組合
+            'bai': '바이', 'pai': '파이', 'mai': '마이',
+            'dai': '다이', 'tai': '타이', 'nai': '나이', 'lai': '라이',
+            'gai': '가이', 'kai': '카이', 'hai': '하이',
+            'zai': '자이', 'cai': '차이', 'sai': '사이',
+            
+            'bei': '베이', 'pei': '페이', 'mei': '메이', 'fei': '페이',
+            'dei': '데이', 'nei': '네이', 'lei': '레이',
+            'gei': '게이', 'hei': '헤이',
+            'zei': '제이',
+            
+            'wei': '웨이',
+            
+            // ao/ou組合
+            'bao': '바오', 'pao': '파오', 'mao': '마오',
+            'dao': '다오', 'tao': '타오', 'nao': '나오', 'lao': '라오',
+            'gao': '가오', 'kao': '카오', 'hao': '하오',
+            'zhao': '자오', 'chao': '차오', 'shao': '사오', 'rao': '라오',
+            'zao': '자오', 'cao': '차오', 'sao': '사오',
+            'yao': '야오',
+            
+            'dou': '도우', 'tou': '토우', 'nou': '노우', 'lou': '로우',
+            'gou': '고우', 'kou': '코우', 'hou': '호우',
+            'zhou': '조우', 'chou': '초우', 'shou': '소우', 'rou': '로우',
+            'zou': '조우', 'cou': '초우', 'sou': '소우',
+            'you': '유',
+            
+            // an/en組合
+            'ban': '반', 'pan': '판', 'man': '만', 'fan': '판',
+            'dan': '단', 'tan': '탄', 'nan': '난', 'lan': '란',
+            'gan': '간', 'kan': '칸', 'han': '한',
+            'zhan': '잔', 'chan': '찬', 'shan': '산', 'ran': '란',
+            'zan': '잔', 'can': '찬', 'san': '산',
+            'yan': '얀',
+            
+            'ben': '번', 'pen': '펀', 'men': '먼', 'fen': '펀',
+            'den': '던', 'nen': '넌',
+            'gen': '건', 'ken': '컨', 'hen': '헌',
+            'zhen': '전', 'chen': '천', 'shen': '션', 'ren': '런',
+            'zen': '전', 'cen': '천', 'sen': '선',
+            
+            'wen': '원',
+            
+            // ang/eng組合
+            'bang': '방', 'pang': '팡', 'mang': '망', 'fang': '팡',
+            'dang': '당', 'tang': '탕', 'nang': '낭', 'lang': '랑',
+            'gang': '강', 'kang': '칸', 'hang': '항',
+            'zhang': '장', 'chang': '창', 'shang': '상', 'rang': '랑',
+            'zang': '장', 'cang': '창', 'sang': '상',
+            'yang': '양',
+            
+            'beng': '벙', 'peng': '펑', 'meng': '멍', 'feng': '펑',
+            'deng': '등', 'teng': '텅', 'neng': '넝', 'leng': '렁',
+            'geng': '겅', 'keng': '컹', 'heng': '헝',
+            'zheng': '정', 'cheng': '청', 'sheng': '성', 'reng': '렁',
+            'zeng': '증', 'ceng': '층', 'seng': '승',
+            
+            // ing組合
+            'bing': '빙', 'ping': '핑', 'ming': '밍',
+            'ding': '딩', 'ting': '팅', 'ning': '닝', 'ling': '링',
+            'jing': '징', 'qing': '칭', 'xing': '싱',
+            'ying': '잉',
+            
+            // ong組合
+            'dong': '동', 'tong': '통', 'nong': '농', 'long': '롱',
+            'gong': '공', 'kong': '콩', 'hong': '홍',
+            'zhong': '종', 'chong': '총', 'rong': '롱',
+            'zong': '종', 'cong': '총', 'song': '송',
+            'yong': '융',
+            
+            // ia/ie/iao/iu組合
+            'jia': '지아', 'qia': '치아', 'xia': '시아',
+            'ya': '야',
+            
+            'jie': '지에', 'qie': '치에', 'xie': '시에',
+            'ye': '예',
+            
+            'jiao': '지아오', 'qiao': '치아오', 'xiao': '시아오',
+            
+            'jiu': '지우', 'qiu': '치우', 'xiu': '시우',
+            'liu': '리우', 'niu': '니우',
+            
+            // ian/iang組合
+            'jian': '지안', 'qian': '치안', 'xian': '시안',
+            'lian': '리안', 'mian': '미안', 'nian': '니안',
+            
+            'jiang': '지앙', 'qiang': '치앙', 'xiang': '시앙',
+            'liang': '리앙', 'niang': '니앙',
+            
+            // ua/uo/uai/ui/uan/un組合
+            'gua': '과', 'kua': '콰', 'hua': '화',
+            'zhua': '주아', 'chua': '추아', 'shua': '수아',
+            'wa': '와',
+            
+            'duo': '뚜오', 'tuo': '투오', 'nuo': '누오', 'luo': '루오',
+            'guo': '궈', 'kuo': '쿼', 'huo': '훠',
+            'zhuo': '주오', 'chuo': '추오', 'shuo': '수오', 'ruo': '루오',
+            'zuo': '주오', 'cuo': '추오', 'suo': '수오',
+            
+            'guai': '과이', 'kuai': '콰이', 'huai': '화이',
+            'zhuai': '주아이', 'chuai': '추아이', 'shuai': '수아이',
+            'wai': '와이',
+            
+            'dui': '뛔', 'tui': '퇴', 'gui': '귀', 'kui': '퀴', 'hui': '휘',
+            'zhui': '쥐', 'chui': '췌', 'shui': '쉬', 'rui': '뤼',
+            'zui': '쥐', 'cui': '췌', 'sui': '쉬',
+            
+            'duan': '두안', 'tuan': '투안', 'nuan': '누안', 'luan': '루안',
+            'guan': '관', 'kuan': '콴', 'huan': '환',
+            'zhuan': '주안', 'chuan': '추안', 'shuan': '수안', 'ruan': '루안',
+            'zuan': '주안', 'cuan': '추안', 'suan': '수안',
+            'yuan': '위안',
+            'wan': '완',
+            
+            'dun': '둔', 'tun': '툰', 'nun': '눈', 'lun': '룬',
+            'gun': '군', 'kun': '쿤', 'hun': '훈',
+            'zhun': '준', 'chun': '춘', 'shun': '순', 'run': '룬',
+            'zun': '준', 'cun': '춘', 'sun': '순',
+            'yun': '윤',
+            
+            // uang/ung組合
+            'guang': '광', 'kuang': '쾅', 'huang': '황',
+            'zhuang': '좡', 'chuang': '췡', 'shuang': '쌍',
+            'wang': '왕',
+            
+            // üe/ü組合
+            'jue': '쥐에', 'que': '취에', 'xue': '쉬에',
+            'yue': '위에',
+            
+            'ju': '쥐', 'qu': '취', 'xu': '쉬',
+            'yu': '위',
+            
+            'juan': '쥐안', 'quan': '취안', 'xuan': '쉬안',
+            
+            'jun': '쥔', 'qun': '췬', 'xun': '쉰',
+            
+            // 數字
+            '0': '령', '1': '일', '2': '이', '3': '삼', '4': '사',
+            '5': '오', '6': '육', '7': '칠', '8': '팔', '9': '구',
+            
+            // zh/ch/sh/r 開頭的特殊處理
+            'zhi': '지', 'chi': '치', 'shi': '스', 'ri': '리',
+            'zhe': '저', 'che': '처', 'she': '셔', 're': '러',
+            'zhu': '주', 'chu': '추', 'shu': '수', 'ru': '루',
+            'zhao': '자오', 'chao': '차오', 'shao': '사오', 'rao': '라오',
+            
+            'zi': '즈', 'ci': '츠', 'si': '스',
+            'ze': '저', 'ce': '처', 'se': '서',
+            
+            // 特殊拼音
+            'le': '러', 'de': '더', 'me': '머', 'ne': '너',
+            'te': '터', 'ge': '거', 'ke': '커', 'he': '허',
+        };
+        
+        function convert() {
+            const input = document.getElementById('input').value.trim();
+            if (!input) {
+                alert('請輸入拼音！');
+                return;
+            }
+            
+            // 分割成音節
+            const syllables = input.toLowerCase().split(/\s+/);
+            const results = [];
+            
+            for (let syllable of syllables) {
+                // 移除數字聲調
+                syllable = syllable.replace(/[1-4]/g, '');
+                
+                // 查表轉換
+                if (py2kr[syllable]) {
+                    results.push(py2kr[syllable]);
+                } else {
+                    results.push('[' + syllable + ']');
+                }
+            }
+            
+            document.getElementById('output').value = results.join(' ');
+        }
+        
+        function copyOutput() {
+            const output = document.getElementById('output');
+            if (!output.value) {
+                alert('沒有內容可複製！');
+                return;
+            }
+            output.select();
+            document.execCommand('copy');
+            alert('✅ 已複製！');
+        }
+        
+        function clearAll() {
+            document.getElementById('input').value = '';
+            document.getElementById('output').value = '';
+        }
+        
+        function loadExample(text) {
+            document.getElementById('input').value = text;
+            convert();
+        }
+        
+        // Enter 快捷鍵
+        document.getElementById('input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                convert();
+            }
+        });
+        
+        console.log('🔐 轉換器已就緒');
+    </script>
+</body>
+</html>

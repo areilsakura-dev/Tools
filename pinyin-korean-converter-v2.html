@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>拼音 → 韓文加密轉換器 🔐</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans CJK TC', 'Microsoft JhengHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #764ba2;
+            margin-bottom: 10px;
+            font-size: 2.2em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1em;
+        }
+        
+        .converter-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .input-section, .output-section {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        label {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-family: 'Noto Sans CJK TC', 'Microsoft JhengHei', monospace;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        #output {
+            background: #f8f9fa;
+            font-size: 1.3em;
+            line-height: 1.8;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        
+        button {
+            padding: 12px 30px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+        
+        .btn-convert {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-convert:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-copy {
+            background: #4CAF50;
+            color: white;
+        }
+        
+        .btn-copy:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+        
+        .btn-clear {
+            background: #f44336;
+            color: white;
+        }
+        
+        .btn-clear:hover {
+            background: #da190b;
+            transform: translateY(-2px);
+        }
+        
+        .btn-convert-mini:hover {
+            background: #5568d3;
+            transform: scale(1.05);
+        }
+        
+        .examples {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .examples h3 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+        
+        .example-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .example-item:hover {
+            background: #ffe8a1;
+        }
+        
+        .example-item strong {
+            color: #667eea;
+        }
+        
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .info-box h3 {
+            color: #1976D2;
+            margin-bottom: 10px;
+        }
+        
+        .info-box ul {
+            margin-left: 20px;
+            color: #333;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .tone-option {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .tone-option label {
+            margin: 0;
+        }
+        
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 768px) {
+            .converter-area {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.6em;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+            }
+        }
+        
+        .footer {
+            text-align: center;
+            color: #999;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>拼音 → 韓文加密轉換器 🔐</h1>
+        <p class="subtitle">把中文拼音轉成韓文，視覺加密你的訊息</p>
+        
+        <div class="info-box">
+            <h3>💡 使用說明</h3>
+            <ul>
+                <li>輸入中文拼音（用空格分隔）</li>
+                <li>支援帶數字聲調（如：ni3 hao3）或不帶聲調</li>
+                <li>📱 手機：點擊輸出框旁的「🔄 轉換」按鈕</li>
+                <li>💻 電腦：按 Enter 鍵快速轉換</li>
+                <li>點擊範例可快速試用</li>
+            </ul>
+        </div>
+        
+        <div class="tone-option">
+            <input type="checkbox" id="includeTone">
+            <label for="includeTone">包含聲調標記（用收尾音：ㄴ=²聲、ㅇ=³聲、ㄹ=⁴聲）</label>
+        </div>
+        
+        <div class="converter-area">
+            <div class="input-section">
+                <label for="input">📝 輸入拼音</label>
+                <textarea id="input" placeholder="例如：wo ai ni&#10;或：wo3 ai4 ni3"></textarea>
+            </div>
+            
+            <div class="output-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <label for="output" style="margin: 0;">🇰🇷 韓文輸出</label>
+                    <button class="btn-convert-mini" onclick="convert()" style="padding: 8px 20px; font-size: 0.9em; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer;">🔄 轉換</button>
+                </div>
+                <textarea id="output" readonly placeholder="轉換結果會顯示在這裡..."></textarea>
+            </div>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-value" id="charCount">0</div>
+                <div class="stat-label">字符數</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="syllableCount">0</div>
+                <div class="stat-label">音節數</div>
+            </div>
+        </div>
+        
+        <div class="button-group">
+            <button class="btn-convert" onclick="convert()">🔄 轉換</button>
+            <button class="btn-copy" onclick="copyOutput()">📋 複製結果</button>
+            <button class="btn-clear" onclick="clearAll()">🗑️ 清空</button>
+        </div>
+        
+        <div class="examples">
+            <h3>📌 範例（點擊試用）</h3>
+            <div class="example-item" onclick="loadExample('wo ai ni')">
+                <strong>我愛你：</strong> wo ai ni
+            </div>
+            <div class="example-item" onclick="loadExample('jin wan jian mian')">
+                <strong>今晚見面：</strong> jin wan jian mian
+            </div>
+            <div class="example-item" onclick="loadExample('mi ma shi ba jiu liu si')">
+                <strong>密碼是8964：</strong> mi ma shi ba jiu liu si
+            </div>
+            <div class="example-item" onclick="loadExample('ji hua qu xiao le')">
+                <strong>計畫取消了：</strong> ji hua qu xiao le
+            </div>
+            <div class="example-item" onclick="loadExample('lao di fang deng ni')">
+                <strong>老地方等你：</strong> lao di fang deng ni
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Made with 🌺 by Ariel</p>
+            <p style="margin-top: 10px; font-size: 0.9em;">韓文40音系統 · 拼音視覺加密工具</p>
+        </div>
+    </div>
+    
+    <script>
+        // 拼音 → 韓文映射表
+        const pinyinToKorean = {
+            // 聲母
+            'b': 'ㅂ', 'p': 'ㅍ', 'm': 'ㅁ', 'f': 'ㅍ',
+            'd': 'ㄷ', 't': 'ㅌ', 'n': 'ㄴ', 'l': 'ㄹ',
+            'g': 'ㄱ', 'k': 'ㅋ', 'h': 'ㅎ',
+            'j': 'ㅈ', 'q': 'ㅊ', 'x': 'ㅅ',
+            'zh': 'ㅈ', 'ch': 'ㅊ', 'sh': 'ㅅ', 'r': 'ㄹ',
+            'z': 'ㅈ', 'c': 'ㅊ', 's': 'ㅅ',
+            
+            // 韻母
+            'a': '아', 'o': '오', 'e': '어', 'i': '이', 'u': '우', 'ü': '위', 'v': '위',
+            'ai': '아이', 'ei': '에이', 'ui': '위', 'ao': '아오', 'ou': '오우',
+            'iu': '유', 'ie': '예', 'üe': '위에', 've': '위에',
+            'er': '얼',
+            'an': '안', 'en': '언', 'in': '인', 'un': '운', 'ün': '윈', 'vn': '윈',
+            'ang': '앙', 'eng': '엉', 'ing': '잉', 'ong': '옹',
+            'ia': '야', 'iao': '야오', 'ian': '얀', 'iang': '양', 'iong': '융',
+            'ua': '와', 'uo': '워', 'uai': '와이', 'uan': '완', 'uang': '왕',
+            'üan': '위안', 'van': '위안', 'ue': '위에',
+            
+            // 特殊
+            'yi': '이', 'wu': '우', 'yu': '위',
+            'ye': '예', 'yue': '위에',
+            'ya': '야', 'yao': '야오', 'yan': '얀', 'yang': '양', 'you': '유', 'yong': '융', 'yin': '인',
+            'wa': '와', 'wo': '워', 'wai': '와이', 'wei': '웨이', 'wan': '완', 'wen': '원', 'wang': '왕', 'weng': '웡'
+        };
+        
+        // 聲調映射（收尾音）
+        const toneEndings = {
+            '1': '', '2': 'ㄴ', '3': 'ㅇ', '4': 'ㄹ'
+        };
+        
+        function convertSyllable(syllable, includeTone) {
+            // 移除空白
+            syllable = syllable.trim().toLowerCase();
+            if (!syllable) return '';
+            
+            // 檢查是否有聲調數字
+            let tone = '';
+            const toneMatch = syllable.match(/[1-4]$/);
+            if (toneMatch) {
+                tone = toneMatch[0];
+                syllable = syllable.slice(0, -1);
+            }
+            
+            // 直接匹配完整音節
+            if (pinyinToKorean[syllable]) {
+                let result = pinyinToKorean[syllable];
+                if (includeTone && tone) {
+                    result += toneEndings[tone];
+                }
+                return result;
+            }
+            
+            // 嘗試分解聲母+韻母
+            for (let initLen = 2; initLen >= 0; initLen--) {
+                const initial = syllable.slice(0, initLen);
+                const final = syllable.slice(initLen);
+                
+                if (pinyinToKorean[final]) {
+                    let result = '';
+                    if (initial && pinyinToKorean[initial]) {
+                        // 組合聲母和韻母
+                        const consonant = pinyinToKorean[initial];
+                        const vowel = pinyinToKorean[final];
+                        // 簡單組合（實際需要更複雜的邏輯）
+                        result = consonant + vowel.slice(1);
+                    } else {
+                        result = pinyinToKorean[final];
+                    }
+                    
+                    if (includeTone && tone) {
+                        result += toneEndings[tone];
+                    }
+                    return result;
+                }
+            }
+            
+            // 無法轉換，返回原文
+            return `[${syllable}]`;
+        }
+        
+        function convert() {
+            const input = document.getElementById('input').value;
+            const includeTone = document.getElementById('includeTone').checked;
+            
+            if (!input.trim()) {
+                alert('請輸入拼音！');
+                return;
+            }
+            
+            // 分割音節
+            const syllables = input.split(/\s+/);
+            const result = syllables.map(s => convertSyllable(s, includeTone)).join(' ');
+            
+            document.getElementById('output').value = result;
+            
+            // 更新統計
+            document.getElementById('charCount').textContent = result.replace(/\s/g, '').length;
+            document.getElementById('syllableCount').textContent = syllables.filter(s => s.trim()).length;
+        }
+        
+        function copyOutput() {
+            const output = document.getElementById('output');
+            if (!output.value) {
+                alert('沒有內容可複製！');
+                return;
+            }
+            
+            output.select();
+            document.execCommand('copy');
+            alert('✅ 已複製到剪貼簿！');
+        }
+        
+        function clearAll() {
+            document.getElementById('input').value = '';
+            document.getElementById('output').value = '';
+            document.getElementById('charCount').textContent = '0';
+            document.getElementById('syllableCount').textContent = '0';
+        }
+        
+        function loadExample(text) {
+            document.getElementById('input').value = text;
+            convert();
+        }
+        
+        // 監聽 Enter 鍵快速轉換
+        document.getElementById('input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                convert();
+            }
+        });
+        
+        console.log('🔐 拼音韓文轉換器已載入');
+        console.log('💡 手機：點輸出框旁的「轉換」按鈕');
+        console.log('💡 電腦：按 Enter 快速轉換');
+    </script>
+</body>
+</html>

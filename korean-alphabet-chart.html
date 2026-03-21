@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>韓文40音家族圖 🌸</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans CJK TC', 'Microsoft JhengHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #764ba2;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+        
+        .section {
+            margin-bottom: 50px;
+        }
+        
+        .section-title {
+            font-size: 1.8em;
+            color: #667eea;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .family {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+        }
+        
+        .family:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        }
+        
+        .family-name {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #764ba2;
+            margin-bottom: 15px;
+        }
+        
+        .letters {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .letter-card {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 15px 20px;
+            min-width: 150px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .letter-card:hover {
+            background: #667eea;
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .letter-card.base {
+            border-color: #4CAF50;
+        }
+        
+        .letter-card.aspirated {
+            border-color: #FF9800;
+        }
+        
+        .letter-card.tense {
+            border-color: #F44336;
+        }
+        
+        .letter-card.base:hover {
+            background: #4CAF50;
+        }
+        
+        .letter-card.aspirated:hover {
+            background: #FF9800;
+        }
+        
+        .letter-card.tense:hover {
+            background: #F44336;
+        }
+        
+        .korean {
+            font-size: 2.5em;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .pinyin {
+            font-size: 0.9em;
+            color: #999;
+            display: block;
+            margin-bottom: 3px;
+        }
+        
+        .letter-card:hover .pinyin {
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .chinese {
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+        
+        .letter-card:hover .chinese {
+            color: white;
+        }
+        
+        .type-label {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 0.7em;
+            padding: 2px 6px;
+            border-radius: 5px;
+            background: rgba(0,0,0,0.1);
+        }
+        
+        .legend {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+        
+        .vowel-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+        }
+        
+        .vowel-card {
+            background: white;
+            border: 2px solid #e91e63;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .vowel-card:hover {
+            background: #e91e63;
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .vowel-card .korean {
+            font-size: 2em;
+        }
+        
+        .vowel-card:hover .pinyin {
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .memory-tip {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 5px;
+            font-size: 0.95em;
+        }
+        
+        .memory-tip strong {
+            color: #856404;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .letters {
+                justify-content: center;
+            }
+            
+            .letter-card {
+                min-width: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>韓文40音家族圖 🌸</h1>
+        <p class="subtitle">點擊字母卡片聽發音 · 系統化記憶法</p>
+        
+        <!-- 子音部分 -->
+        <div class="section">
+            <h2 class="section-title">🎵 子音家族 (19個)</h2>
+            
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #4CAF50;"></div>
+                    <span>基礎音</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #FF9800;"></div>
+                    <span>送氣音（加一橫）</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #F44336;"></div>
+                    <span>緊音（雙寫）</span>
+                </div>
+            </div>
+            
+            <!-- ㄱ 家族 -->
+            <div class="family">
+                <div class="family-name">🏠 家族1：ㄱ 家族（喉音）</div>
+                <div class="letters">
+                    <div class="letter-card base" onclick="speak('가')">
+                        <span class="type-label">基礎</span>
+                        <span class="korean">ㄱ</span>
+                        <span class="pinyin">g/k</span>
+                        <span class="chinese">ㄍ 哥</span>
+                    </div>
+                    <div class="letter-card aspirated" onclick="speak('카')">
+                        <span class="type-label">送氣</span>
+                        <span class="korean">ㅋ</span>
+                        <span class="pinyin">k</span>
+                        <span class="chinese">ㄎ 可</span>
+                    </div>
+                    <div class="letter-card tense" onclick="speak('까')">
+                        <span class="type-label">緊音</span>
+                        <span class="korean">ㄲ</span>
+                        <span class="pinyin">kk</span>
+                        <span class="chinese">緊ㄍ</span>
+                    </div>
+                </div>
+                <div class="memory-tip">
+                    <strong>記憶點：</strong>ㄱ → ㅋ（加橫線=加氣）→ ㄲ（雙胞胎=更緊）
+                </div>
+            </div>
+            
+            <!-- ㄴ 單身 -->
+            <div class="family">
+                <div class="family-name">🏠 家族2：ㄴ 單身貴族（鼻音）</div>
+                <div class="letters">
+                    <div class="letter-card base" onclick="speak('나')">
+                        <span class="korean">ㄴ</span>
+                        <span class="pinyin">n</span>
+                        <span class="chinese">ㄋ 呢</span>
+                    </div>
+                </div>
+                <div class="memory-tip">
+                    <strong>記憶點：</strong>像個「L」但發 ㄋ
+                </div>
+            </div>
+            
+            <!-- ㄷ 家族 -->
+            <div class="family">
+                <div class="family-name">🏠 家族3：ㄷ 家族（舌尖音）</div>
+                <div class="letters">
+                    <div class="letter-card base" onclick="speak('다')">
+                        <span class="type-label">基礎</span>
+                        <span class="korean">ㄷ</span>
+                        <span class="pinyin">d/t</span>
+                        <span class="chinese">ㄉ 的</span>
+                    </div>
+                    <div class="letter-card aspirated" onclick="speak('타')">
+                        <span class="type-label">送氣</span>
+                        <span class="korean">ㅌ</span>
+                        <span class="pinyin">t</span>
+                        <span class="chinese">ㄊ 特</span>
+                    </div>
+                    <div class="letter-card tense" onclick="speak('따')">
+                        <span class="type-label">緊音</span>
+                        <span class="korean">ㄸ</span>
+                        <span class="pinyin">tt</span>
+                        <span class="chinese">緊ㄉ</span>
+                    </div>
+                </div>
+                <div class="memory-tip">
+                    <strong>記憶點：</strong>跟 ㄱ 家族規則一模一樣！
+                </div>
+            </div>
+            
+            <!-- ㄹ 單身 -->
+            <div class="family">
+                <div class="family-name">🏠 家族4：ㄹ 單身貴族（流音）</div>
+                <div class="letters">
+                    <div class="letter-card base" onclick="speak('라')">
+                        <span class="korean">ㄹ</span>
+                        <span class="pinyin">r/l</span>
+                        <span class="chinese">ㄌ/ㄖ</span>
+                    </div>
+                </div>
+                <div class="memory-tip">
+                    <strong>記憶點：</strong>像個「己」的變形
+                </div>
+            </div>
+            
+            <!-- ㅁ 單身 -->
+            <div class="family">
+                <div class="family-name">🏠 家族5：ㅁ 單身貴族（鼻音）</div>
+                <div class="letters">
+                    <div class="letter-card base" onclick="speak('마')">
+                        <span class="korean">ㅁ</span>
+                        <span class="pinyin">m</span>
+                        <span class="chinese">ㄇ 麼</span>
+                    </div>
+                </div>
+                <div class="memory-tip">
+                    <strong>記憶點：</strong>像個「口」
+                </div>
+            </div>
+            
+            <!-- ㅂ 家族 -->
+            <div class="family">
+                <div class="family-name">🏠 家族6：ㅂ 家族（唇音）</div>
+                <div class="letters">
+                    <div class="letter-card base" onclick="speak('바')">
+                        <span class="type-label">基礎</span>
+                        <span class="korean">ㅂ</span>
+                        <span class="pinyin">b/p</span>
+                        <span class="chinese">ㄅ 波</span>
+                    </div>
+                    <div class="letter-card aspirated" onclick="speak('파')">
+                        <span class="type-label">送氣</span>
+                        <span class="korean">ㅍ</span>
+                        <span class="pinyin">p</span>
+                        <span class="chinese">ㄆ 撲</span>
+                    </div>
+                    <div class="letter-card tense" onclick="speak('빠')">
+                        <span class="type-label">緊音</span>
+                        <span class="korean">ㅃ</span>
+                        <span class="pinyin">pp</span>
+                        <span class="chinese">緊ㄅ</span>
+                    </div>
+                </div>
+                <div class="memory-tip">
+                    <strong>記憶點：</strong>又是同樣的家族規則！
+                </div>
+            </div>
+            
+            <!-- ㅅ 家族 -->
+            <div class="family">
+                <div class="family-name">🏠 家族7：ㅅ 家族（齒音）</div>
+                <div class="letters">
+                    <div class="letter-card base" onclick="speak('사')">
+                        <span class="type-label">基礎</span>
+                        <span class="korean">ㅅ</span>
+                        <span class="pinyin">s</span>
+                        <span class="chinese">ㄙ 思</span>
+                    </div>
+                    <div class="letter-card tense" onclick="speak('싸')">
+                        <span class="type-label">緊音</span>
+                        <span class="korean">ㅆ</span>
+                        <span class="pinyin">ss</span>
+                        <span class="chinese">緊ㄙ</span>
+                    </div>
+                </div>
+                <div class="memory-tip">
+                    <strong>記憶點：</strong>像個「山」，但這家族<strong>沒有加橫線版本</strong>
+                </div>
+            </div>
+            
+            <!-- ㅇ 單身 -->
+            <div class="family">
+                <div class="family-name">🏠 家族8：ㅇ 單身貴族（特殊音）</div>
+                <div class="letters">
+                    <div class="letter-card base" onclick="speak('아')">
+                        <span class="korean">ㅇ</span>
+                        <span class="pinyin">-/ng</span>
+                        <span class="chinese">不發音/ㄥ</span>
+                    </div>
+                </div>
+                <div class="memory-tip">
+                    <strong>記憶點：</strong>像個「○」圓圈，開頭不發音，結尾發 ㄥ
+                </div>
+            </div>
+            
+            <!-- ㅈ 家族 -->
+            <div class="family">
+                <div class="family-name">🏠 家族9：ㅈ 家族（硬顎音）</div>
+                <div class="letters">
+                    <div class="letter-card base" onclick="speak('자')">
+                        <span class="type-label">基礎</span>
+                        <span class="korean">ㅈ</span>
+                        <span class="pinyin">j</span>
+                        <span class="chinese">ㄐ ㄐㄧ</span>
+                    </div>
+                    <div class="letter-card aspirated" onclick="speak('차')">
+                        <span class="type-label">送氣</span>
+                        <span class="korean">ㅊ</span>
+                        <span class="pinyin">ch</span>
+                        <span class="chinese">ㄑ ㄑㄧ</span>
+                    </div>
+                    <div class="letter-card tense" onclick="speak('짜')">
+                        <span class="type-label">緊音</span>
+                        <span class="korean">ㅉ</span>
+                        <span class="pinyin">jj</span>
+                        <span class="chinese">緊ㄐ</span>
+                    </div>
+                </div>
+                <div class="memory-tip">
+                    <strong>記憶點：</strong>家族規則再次重複！
+                </div>
+            </div>
+            
+            <!-- ㅎ 單身 -->
+            <div class="family">
+                <div class="family-name">🏠 家族10：ㅎ 單身貴族（喉音）</div>
+                <div class="letters">
+                    <div class="letter-card base" onclick="speak('하')">
+                        <span class="korean">ㅎ</span>
+                        <span class="pinyin">h</span>
+                        <span class="chinese">ㄏ 喝</span>
+                    </div>
+                </div>
+                <div class="memory-tip">
+                    <strong>記憶點：</strong>像個「흐」的帽子
+                </div>
+            </div>
+        </div>
+        
+        <!-- 母音部分 -->
+        <div class="section">
+            <h2 class="section-title">🌟 母音家族 (21個)</h2>
+            
+            <!-- 基本單母音 -->
+            <div class="family">
+                <div class="family-name">基本單母音（10個）</div>
+                <div class="vowel-grid">
+                    <div class="vowel-card" onclick="speak('아')">
+                        <span class="korean">ㅏ</span>
+                        <span class="pinyin">a</span>
+                        <span class="chinese">ㄚ 啊</span>
+                    </div>
+                    <div class="vowel-card" onclick="speak('야')">
+                        <span class="korean">ㅑ</span>
+                        <span class="pinyin">ya</span>
+                        <span class="chinese">ㄧㄚ 呀</span>
+                    </div>
+                    <div class="vowel-card" onclick="speak('어')">
+                        <span class="korean">ㅓ</span>
+                        <span class="pinyin">eo</span>
+                        <span class="chinese">ㄜ 額</span>
+                    </div>
+                    <div class="vowel-card" onclick="speak('여')">
+                        <span class="korean">ㅕ</span>
+                        <span class="pinyin">yeo</span>
+                        <span class="chinese">ㄧㄜ 耶</span>
+                    </div>
+                    <div class="vowel-card" onclick="speak('오')">
+                        <span class="korean">ㅗ</span>
+                        <span class="pinyin">o</span>
+                        <span class="chinese">ㄛ 喔</span>
+                    </div>
+                    <div class="vowel-card" onclick="speak('요')">
+                        <span class="korean">ㅛ</span>
+                        <span class="pinyin">yo</span>
+                        <span class="chinese">ㄧㄛ 唷</span>
+                    </div>
+                    <div class="vowel-card" onclick="speak('우')">
+                        <span class="korean">ㅜ</span>
+                        <span class="pinyin">u</span>
+                        <span class="chinese">ㄨ 嗚</span>
+                    </div>
+                    <div class="vowel-card" onclick="speak('유')">
+                        <span class="korean">ㅠ</span>
+                        <span class="pinyin">yu</span>
+                        <span class="chinese">ㄧㄨ 優</span>
+                    </div>
+                    <div class="vowel-card" onclick="speak('으')">
+                        <span class="korean">ㅡ</span>
+                        <span class="pinyin">eu</span>
+                        <span class="chinese">ㄜ扁</span>
+                    </div>
+                    <div class="vowel-card" onclick="speak('이')">
+                        <span class="korean">ㅣ</span>
+                        <span class="pinyin">i</span>
+                        <span class="chinese">ㄧ 衣</span>
+                    </div>
+                </div>
+                <div class="memory-tip">
+                    <strong>記憶點：</strong>加一撇 = Y版（ㅏ→ㅑ、ㅓ→ㅕ、ㅗ→ㅛ、ㅜ→ㅠ）
+                </div>
+            </div>
+            
+            <!-- 複合母音 -->
+            <div class="family">
+                <div class="family-name">複合母音（11個）</div>
+                <div class="vowel-grid">
+                    <div class="vowel-card" onclick="speak('애')">
+                        <span class="korean">ㅐ</span>
+                        <span class="pinyin">ae</span>
+                        <span class="chinese">ㄝ 欸</span>
+                    </div>
+                    <div class="vowel-card" onclick="speak('얘')">
+                        <span class="korean">ㅒ</span>
+                        <span class="pinyin">yae</span>
+                        <span class="chinese">ㄧㄝ</span>
+                    </div>
+                    <div class="vowel-card" onclick="speak('에')">
+                        <span class="korean">ㅔ</span>
+                        <span class="pinyin">e</span>
+                        <span class="chinese">ㄟ 诶</span>
+                    </div>
+                    <div class="vowel-card" onclick="speak('예')">
+                        <span class="korean">ㅖ</span>
+                        <span class="pinyin">ye</span>
+                        <span class="chinese">ㄧㄟ</span>
+                    </div>
+                    <div class="vowel-card" onclick="speak('와')">
+                        <span class="korean">ㅘ</span>
+                        <span class="pinyin">wa</span>
+                        <span class="chinese">ㄨㄚ 蛙</span>
+                    </div>
+                    <div class="vowel-card" onclick="speak('왜')">
+                        <span class="korean">ㅙ</span>
+                        <span class="pinyin">wae</span>
+                        <span class="chinese">ㄨㄝ 歪</span>
+                    </div>
+                    <div class="vowel-card" onclick="speak('외')">
+                        <span class="korean">ㅚ</span>
+                        <span class="pinyin">oe</span>
+                        <span class="chinese">ㄨㄟ</span>
+                    </div>
+                    <div class="vowel-card" onclick="speak('워')">
+                        <span class="korean">ㅝ</span>
+                        <span class="pinyin">wo</span>
+                        <span class="chinese">ㄨㄜ 窩</span>
+                    </div>
+                    <div class="vowel-card" onclick="speak('웨')">
+                        <span class="korean">ㅞ</span>
+                        <span class="pinyin">we</span>
+                        <span class="chinese">ㄨㄟ</span>
+                    </div>
+                    <div class="vowel-card" onclick="speak('위')">
+                        <span class="korean">ㅟ</span>
+                        <span class="pinyin">wi</span>
+                        <span class="chinese">ㄨㄧ 威</span>
+                    </div>
+                    <div class="vowel-card" onclick="speak('의')">
+                        <span class="korean">ㅢ</span>
+                        <span class="pinyin">ui</span>
+                        <span class="chinese">ㄨㄧ 依</span>
+                    </div>
+                </div>
+                <div class="memory-tip">
+                    <strong>記憶點：</strong>W系列 = 橫向+豎向組合（ㅗ+ㅏ=ㅘ、ㅜ+ㅓ=ㅝ）
+                </div>
+            </div>
+        </div>
+        
+        <!-- 學習順序建議 -->
+        <div class="section">
+            <h2 class="section-title">📚 系統化學習順序</h2>
+            <div class="family">
+                <div class="family-name">第1週：基礎子音（10個）</div>
+                <p style="padding: 10px 0; font-size: 1.5em;">ㄱ ㄴ ㄷ ㄹ ㅁ ㅂ ㅅ ㅇ ㅈ ㅎ</p>
+            </div>
+            <div class="family">
+                <div class="family-name">第2週：基礎母音（10個）</div>
+                <p style="padding: 10px 0; font-size: 1.5em;">ㅏ ㅓ ㅗ ㅜ ㅡ ㅣ ㅑ ㅕ ㅛ ㅠ</p>
+            </div>
+            <div class="family">
+                <div class="family-name">第3週：進階子音（9個）</div>
+                <p style="padding: 10px 0; font-size: 1.5em;">ㅋ ㅌ ㅍ ㅊ / ㄲ ㄸ ㅃ ㅆ ㅉ</p>
+            </div>
+            <div class="family">
+                <div class="family-name">第4週：複合母音（11個）</div>
+                <p style="padding: 10px 0; font-size: 1.5em;">ㅐ ㅒ ㅔ ㅖ ㅘ ㅙ ㅚ ㅝ ㅞ ㅟ ㅢ</p>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 40px; color: #999;">
+            <p>💡 提示：點擊字母卡片可以聽發音</p>
+            <p style="margin-top: 10px;">Made with 🌺 by Ariel</p>
+        </div>
+    </div>
+    
+    <script>
+        function speak(text) {
+            // 使用 Web Speech API
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'ko-KR';
+                utterance.rate = 0.8; // 放慢速度
+                window.speechSynthesis.speak(utterance);
+            } else {
+                alert('你的瀏覽器不支援語音功能 😢\n請使用 Chrome、Edge 或 Safari');
+            }
+        }
+        
+        // 頁面載入時的歡迎訊息
+        console.log('🌸 韓文40音家族圖已載入！');
+        console.log('💡 點擊任何字母卡片即可聽發音');
+    </script>
+</body>
+</html>
