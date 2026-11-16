@@ -1,4 +1,4 @@
-# Ariel 的 HTML 工具箱 🌺
+# PP 的 HTML 工具箱 🌺
 
 這裡放置各種實用的 HTML 工具，可以直接在瀏覽器中使用。
 
@@ -40,5 +40,5 @@ https://areilsakura-dev.github.io/ariel-workspace/tools/
 
 ---
 
-**製作者:** Ariel 🌺  
+**製作者:** PP 🌺  
 **Repository:** https://github.com/areilsakura-dev/ariel-workspace
